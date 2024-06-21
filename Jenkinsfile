@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     sh 'python3 -m venv venv'  // Create virtual environment
-                    sh 'source venv/bin/activate && pip install -r requirements.txt'  // Activate and install dependencies
+                    sh '. venv/bin/activate && python3 -m pip install -r requirements.txt'  // Activate and install dependencies
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'source venv/bin/activate && pytest'  // Activate virtual environment and run tests
+                    sh '. venv/bin/activate && pytest'  // Activate virtual environment and run tests
                 }
             }
         }
@@ -35,7 +35,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 5000:5000 flask-app:${env.BUILD_NUMBER}'  // Deploy Docker container
+                script {
+                    sh 'docker run -d -p 5000:5000 flask-app:${env.BUILD_NUMBER}'  // Deploy Docker container
+                }
             }
         }
     }
