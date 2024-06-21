@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh '/usr/bin/python3 -m pip install -r requirements.txt'
             }
         }
 
@@ -30,7 +30,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Deployment steps (e.g., running the Docker container)
                 sh 'docker run -d -p 5000:5000 flask-app:${env.BUILD_NUMBER}'
             }
         }
@@ -48,3 +47,4 @@ pipeline {
         }
     }
 }
+
