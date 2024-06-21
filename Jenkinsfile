@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        VENV = 'venv'
+        PATH = "${env.VENV}/bin:$PATH"
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
