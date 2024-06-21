@@ -1,14 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/yourusername/flask-app.git'
+                git 'https://github.com/vaibhav8975/python-flask.git'
             }
         }
 
@@ -27,25 +23,15 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("yourusername/flask-app:${env.BUILD_NUMBER}")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                        docker.image("yourusername/flask-app:${env.BUILD_NUMBER}").push()
-                    }
+                    docker.build("flask-app:${env.BUILD_NUMBER}")
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                // Deployment steps (e.g., Kubernetes, ECS, or SSH to a server)
-                sh 'echo "Deploying application..."'
+                // Deployment steps (e.g., running the Docker container)
+                sh 'docker run -d -p 5000:5000 flask-app:${env.BUILD_NUMBER}'
             }
         }
     }
